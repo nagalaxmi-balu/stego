@@ -1,0 +1,62 @@
+{
+	"context": "../",
+	//"image": "cr.siemens.com/autonomous-systems-control/students/master-thesis-nagalaxmi-balasubramanian/dino:dev",
+	"dockerFile": "../docker/Dockerfile",
+	"runArgs": [
+		//"--gpus","device=2,3",
+		"--device", "/dev/snd",
+		"--cap-add=SYS_PTRACE",
+		"--security-opt", "seccomp=unconfined",
+		"-m","50g",
+		"-e", "DISPLAY=${env:DISPLAY}",
+		"-e", "PULSE_SERVER=unix:${env:XDG_RUNTIME_DIR}/pulse/native",
+		"-e",
+		
+        "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility",
+
+        "--ipc=host",
+		"--runtime=nvidia"
+	],
+	"build": {
+		"args": {
+			"HTTP_PROXY": "${localEnv:http_proxy}",
+			"HTTPS_PROXY": "${localEnv:http_proxy}"
+		}
+	},
+	"settings": {
+		"lldb.adapterType": "native",
+		"lldb.executable": "/usr/bin/lldb",
+		"terminal.integrated.shell.linux": "/bin/bash"
+	},
+	"containerEnv": {
+		"NVIDIA_VISIBLE_DEVICES": "1,2",
+		"http_proxy": "${localEnv:http_proxy}",
+		"https_proxy": "${localEnv:http_proxy}"
+	},
+	"mounts": [
+		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly",
+		"source=/media/datasets/,target=/media/datasets/,type=bind,consistency=cached",
+		"source=/media/ssd2/datasets/,target=/media/ssd2/datasets/,type=bind,consistency=cached",
+		"source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind"
+	],
+	"remoteUser": "vscode",
+	
+	"extensions": [
+		"visualstudioexptteam.vscodeintellicode",
+		//"spadin.remote-x11",
+		//"gitlab.gitlab-workflow",
+		"eamodio.gitlens",
+	    //"python extensions",
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+		//cpp extensions
+		"ms-vscode.cpptools",
+		"ms-vscode.cmake-tools",
+		"llvm-vs-code-extensions.vscode-clangd",
+		"cschlosser.doxdocgen",
+		"jeff-hykin.better-cpp-syntax",
+		"twxs.cmake"
+	]
+}
+
+
